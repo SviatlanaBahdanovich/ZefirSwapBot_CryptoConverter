@@ -11,18 +11,26 @@ class CryptoConverter:
     @staticmethod
     def get_price(base: str, quote: str, amount: str):
 
-        if quote == base:
-            raise APIException(f'Enter different values: {base}.')
+        # if quote == base:
+        #     raise APIException(f'Enter different values: {base}.')
 
         # quote_ticker, base_ticker = keys[quote], keys[base]
-        try:
-            base_ticker = keys[base]
-        except KeyError:
-            raise APIException(f'Failed to process the value {base}')
-        try:
-            quote_ticker = keys[quote]
-        except KeyError:
-            raise APIException(f'Failed to process the value {quote}')
+        if base not in keys:
+            raise APIException(f'Unknown currency: {base}')
+        # try:
+        #     base_ticker = keys[base]
+        # except KeyError:
+        #     raise APIException(f'Failed to process the value {base}')
+        base_ticker = keys[base]
+        if quote not in keys:
+            raise APIException(f'Unknown currency: {quote}')
+        if quote == base:
+            raise APIException(f'Enter different values: {base}.')
+        # try:
+        #     quote_ticker = keys[quote]
+        # except KeyError:
+        #     raise APIException(f'Failed to process the value {quote}')
+        quote_ticker = keys[quote]
         try:
             amount = float(amount.replace(",", "."))
             if not math.isfinite(amount):
@@ -32,7 +40,7 @@ class CryptoConverter:
         except ValueError:
             raise APIException(f'Failed to process the amount  {amount}')
         if amount <= 0:
-            raise APIException(f'Ensure amount is more then 0: {amount}')
+            raise APIException(f'Ensure amount is more then 0')
 
 
         url = 'https://min-api.cryptocompare.com/data/price'
